@@ -170,13 +170,13 @@ let passwordPolicy = {
     policyId : "", /*Unique 10 digit Policy ID Number. It is a string variable*/
     passwordLengthMin : 8, /* Variable to hold min length of password*/
     passwordLengthMax : 32, /* Variable to hold */
-    numberAllowed : false, /* Boolean Variable to decide if Number should be part of password*/
+    numberAllowed : null, /* Boolean Variable to decide if Number should be part of password*/
     numberException : "", /*Holds the array of number's which should be excluded as part of password generation*/
     characterAllowed : null, /* Boolean Variable to decide if character should be part of password*/
     isCharUpperCaseAllowed : null, /*Booloean variable to decide if Upper case Char is allowed*/
     isCharLowerCaseAllowed : null, /*Booloean variable to decide if Lower case Char is allowed*/
     characterException : "", /*Holds the array of characters which should be excluded as part of password generation*/
-    specialCharacterAllowed : false,  /* Boolean Variable to decide if Special Character should be part of password*/
+    specialCharacterAllowed : null,  /* Boolean Variable to decide if Special Character should be part of password*/
     specialCharacterException : "", /*Holds the array of Special Character which should be excluded as part of password generation*/
     friendlyPassword : false, /*Boolean Variable to decide if friendly password should be part of password*/
     
@@ -285,93 +285,83 @@ function declarePasswordPolicy (){
   //appPasswordPolicyArrayIndex = appPasswordPolicy.length -1;
   console.log("Value of appPasswordPolicyArrayIndex post is = " + appPasswordPolicyArrayIndex);
 
-  while (appPasswordPolicy[appPasswordPolicyArrayIndex].name == ""){
+  while (appPasswordPolicy[appPasswordPolicyArrayIndex].name == "" || appPasswordPolicy[appPasswordPolicyArrayIndex].name == null){
     let policyName = window.prompt ("Enter the Policy Name");
     appPasswordPolicy[appPasswordPolicyArrayIndex].setName(policyName);
   }
 
-  while (appPasswordPolicy[appPasswordPolicyArrayIndex].policyId == ""){
+  while (appPasswordPolicy[appPasswordPolicyArrayIndex].policyId == "" || appPasswordPolicy[appPasswordPolicyArrayIndex].policyId == null){
     let policyId = uuidGenerator();
     appPasswordPolicy[appPasswordPolicyArrayIndex].setPolicyId(policyId);
   }
   
+
   let passwdLenMin = window.prompt ("Please enter minimum length of your password. Data entered should be in Numbers and should be >=8 and <=128. If no data entered then default minimum length would be set as 8");
-  if (parseInt(passwdLenMin) < 8 || parseInt(passwdLenMin) >  128 || parseInt(passwdLenMin) == undefined){
+  while (parseInt(passwdLenMin) < 8 || parseInt(passwdLenMin) >  128 || passwdLenMin == null || isNaN(passwdLenMin)){
     passwdLenMin = window.prompt ("Please enter valid value of minimum length of your password. Data entered should be in Numbers and should be >=8 and <=128.. If no data entered then default minimum length would be set as 8");
-     if (parseInt(passwdLenMin) < 8 || parseInt(passwdLenMin) >  128 || parseInt(passwdLenMin) == undefined){
-       passwdLenMin =8;  /*set default value as 8*/
-     }
   }
+
   appPasswordPolicy[appPasswordPolicyArrayIndex].setPasswordLengthMin(parseInt(passwdLenMin));
   console.log ("Value of password Min length = " + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin);
 
 
-  let passwdLenMax = 0;
-  if (appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin < appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMax) {
-    passwdLenMax = window.prompt ("Please enter maximum length of your password. Data entered should be in Numbers and should be >" + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin + " and <= 128 .  If no data entered then default minimum length would be set as 128");
-    if (parseInt(passwdLenMax) > 128 || parseInt(passwdLenMax) < appPasswordPolicy[appPasswordPolicyArrayIndex].passwdLenMin){
-      passwdLenMax = window.prompt ("Please enter valid value of maximum length of your password. Please enter maximum length of your password. Data entered should be in Numbers and should be >" + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin + " and <= 128.  If no data entered then default minimum length would be set as 128");
-      if (parseInt(passwdLenMax) > 128 || parseInt(passwdLenMax) < appPasswordPolicy[appPasswordPolicyArrayIndex].passwdLenMin){
-        passwdLenMax = 128;
-      }
-    }
+  let passwdLenMax = window.prompt ("Please enter maximum length of your password. Data entered should be in Numbers and should be >" + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin + " and <= 128.");
+  while (parseInt(passwdLenMax) <= appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin || passwdLenMax == null || isNaN(passwdLenMax || parseInt(passwdLenMax) >128)){
+        passwdLenMax = window.prompt ("Please enter valid value of maximum length of your password. Please enter maximum length of your password. Data entered should be in Numbers and should be >" + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin + " and <= 128.");
   }
 
   appPasswordPolicy[appPasswordPolicyArrayIndex].setPasswordLengthMax(parseInt(passwdLenMax));
   console.log ("Value of password Max length = " + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMax);
 
-  while (appPasswordPolicy[appPasswordPolicyArrayIndex].characterAllowed== null){
-    let charAllowed = window.confirm ("Please confirm if characters are allowed as part of password?");
-    appPasswordPolicy[appPasswordPolicyArrayIndex].setIsCharacterAllowed(charAllowed);
-  }
+  while ((appPasswordPolicy[appPasswordPolicyArrayIndex].characterAllowed== null && appPasswordPolicy[appPasswordPolicyArrayIndex].specialCharacterAllowed == null && appPasswordPolicy[appPasswordPolicyArrayIndex].numberAllowed == null ) || (appPasswordPolicy[appPasswordPolicyArrayIndex].characterAllowed== false && appPasswordPolicy[appPasswordPolicyArrayIndex].specialCharacterAllowed == false && appPasswordPolicy[appPasswordPolicyArrayIndex].numberAllowed == false ))
+  {
+      let charAllowed = window.confirm ("Please confirm if characters are allowed as part of password?");
+      appPasswordPolicy[appPasswordPolicyArrayIndex].setIsCharacterAllowed(charAllowed);
+      if (charAllowed == true){
+        let isUpperCase = window.confirm ("Please confirm if Upper Case Char's are allowed as part of Password?");
+        let isLowerCase = window.confirm ("Please confirm if Lower Case Char's are allowed as part of Password?");
+      // while ((appPasswordPolicy[appPasswordPolicyArrayIndex].isCharUpperCaseAllowed == null && appPasswordPolicy[appPasswordPolicyArrayIndex].isCharLowerCaseAllowed == null) || (appPasswordPolicy[appPasswordPolicyArrayIndex].isCharUpperCaseAllowed == false && appPasswordPolicy[appPasswordPolicyArrayIndex].isCharLowerCaseAllowed==false )) {
+        while (isUpperCase == false && isLowerCase == false){
+            window.alert (" Upper Case or LowerCase character needs to be selected. Please select a correct value " );
+            isUpperCase = window.confirm ("Please confirm if Upper Case Char's are allowed as part of Password?");
+      
+            isLowerCase = window.confirm ("Please confirm if Lower Case Char's are allowed as part of Password?");
+              
+          }
+          appPasswordPolicy[appPasswordPolicyArrayIndex].setIsCharUpperCaseAllowed(isUpperCase);
+          appPasswordPolicy[appPasswordPolicyArrayIndex].setIsCharLowerCaseAllowed(isLowerCase);
+          if (appPasswordPolicy[appPasswordPolicyArrayIndex].characterAllowed == true){
+            let charException = window.prompt ("Please enter list of characters which should not be part of password.");
+            if (charException == null){
+              appPasswordPolicy[appPasswordPolicyArrayIndex].setCharacterException("");
+            }else{
+              appPasswordPolicy[appPasswordPolicyArrayIndex].setCharacterException(charException);
+            }
+          }
+      }
 
+      
+    let specialCharAllowed = window.confirm ("Please confirm if Special Characters are allowed as part of Password?");
+    appPasswordPolicy[appPasswordPolicyArrayIndex].setIsSpecialCharacterAllowed(specialCharAllowed);
+    if (appPasswordPolicy[appPasswordPolicyArrayIndex].specialCharacterAllowed == true){
+      let specialCharException = window.prompt ("Please enter list of special characters which should not be part of password.");
+      if (specialCharException == null){
+        appPasswordPolicy[appPasswordPolicyArrayIndex].setSpecialCharacterException("");
+      }else {
+        appPasswordPolicy[appPasswordPolicyArrayIndex].setSpecialCharacterException(specialCharException);
+      }
+    }
 
-  if (appPasswordPolicy[appPasswordPolicyArrayIndex].characterAllowed== true){
-    let isUpperCase = window.confirm ("Please confirm if Upper Case Char's are allowed as part of Password?");
-    let isLowerCase = window.confirm ("Please confirm if Lower Case Char's are allowed as part of Password?");
-   // while ((appPasswordPolicy[appPasswordPolicyArrayIndex].isCharUpperCaseAllowed == null && appPasswordPolicy[appPasswordPolicyArrayIndex].isCharLowerCaseAllowed == null) || (appPasswordPolicy[appPasswordPolicyArrayIndex].isCharUpperCaseAllowed == false && appPasswordPolicy[appPasswordPolicyArrayIndex].isCharLowerCaseAllowed==false )) {
-     while (isUpperCase == false && isLowerCase == false){
-        window.alert (" Upper Case or LowerCase character needs to be selected. Please select a correct value " );
-        isUpperCase = window.confirm ("Please confirm if Upper Case Char's are allowed as part of Password?");
-  
-        isLowerCase = window.confirm ("Please confirm if Lower Case Char's are allowed as part of Password?");
-        
+    let numberAllowed = window.confirm ("Please confirm if Number are allowed as part of Password?");
+    appPasswordPolicy[appPasswordPolicyArrayIndex].setIsNumberAllowed(numberAllowed);
+    if (appPasswordPolicy[appPasswordPolicyArrayIndex].numberAllowed == true){
+      let numberCharException = window.prompt ("Please enter list of numbers which should not be part of password.");
+      if (numberCharException == null){
+        appPasswordPolicy[appPasswordPolicyArrayIndex].setNumberException("");
+      }else {
+        appPasswordPolicy[appPasswordPolicyArrayIndex].setNumberException(numberCharException);
+      }
     }
-    appPasswordPolicy[appPasswordPolicyArrayIndex].setIsCharUpperCaseAllowed(isUpperCase);
-    appPasswordPolicy[appPasswordPolicyArrayIndex].setIsCharLowerCaseAllowed(isLowerCase);
-  }
-
-  if (appPasswordPolicy[appPasswordPolicyArrayIndex].characterAllowed == true){
-    let charException = window.prompt ("Please enter list of characters which should not be part of password.");
-    if (charException == null){
-      appPasswordPolicy[appPasswordPolicyArrayIndex].setCharacterException("");
-    }else{
-      appPasswordPolicy[appPasswordPolicyArrayIndex].setCharacterException(charException);
-    }
-  }
-  
-  let specialCharAllowed = window.confirm ("Please confirm if Special Characters are allowed as part of Password?");
-  appPasswordPolicy[appPasswordPolicyArrayIndex].setIsSpecialCharacterAllowed(specialCharAllowed);
-  if (appPasswordPolicy[appPasswordPolicyArrayIndex].specialCharacterAllowed == true){
-    let specialCharException = window.prompt ("Please enter list of special characters which should not be part of password.");
-    if (specialCharException == null){
-      appPasswordPolicy[appPasswordPolicyArrayIndex].setSpecialCharacterException("");
-    }else {
-      appPasswordPolicy[appPasswordPolicyArrayIndex].setSpecialCharacterException(specialCharException);
-    }
-    
-  }
-
-  let numberAllowed = window.confirm ("Please confirm if Number are allowed as part of Password?");
-  appPasswordPolicy[appPasswordPolicyArrayIndex].setIsNumberAllowed(numberAllowed);
-  if (appPasswordPolicy[appPasswordPolicyArrayIndex].numberAllowed == true){
-    let numberCharException = window.prompt ("Please enter list of numbers which should not be part of password.");
-    if (numberCharException == null){
-      appPasswordPolicy[appPasswordPolicyArrayIndex].setNumberException("");
-    }else {
-      appPasswordPolicy[appPasswordPolicyArrayIndex].setNumberException(numberCharException);
-    }
-    
   }
 
   /* If all three option is selected as false then make characterAllowed as false*/
