@@ -100,6 +100,7 @@ let profile = {
   }
 }
 
+/*profile Object for holding passord information for future use*/
 let password = {
   passwordId : "",
   appId : "",
@@ -282,20 +283,21 @@ function declarePasswordPolicy (){
   let appPasswordPolicyArrayIndex = appPasswordPolicy.length;
   appPasswordPolicy[appPasswordPolicyArrayIndex] = passwordPolicy;
 
-  //appPasswordPolicyArrayIndex = appPasswordPolicy.length -1;
   console.log("Value of appPasswordPolicyArrayIndex post is = " + appPasswordPolicyArrayIndex);
 
+  /* Prompt User to enter Password Policy Name*/
   while (appPasswordPolicy[appPasswordPolicyArrayIndex].name == "" || appPasswordPolicy[appPasswordPolicyArrayIndex].name == null){
-    let policyName = window.prompt ("Enter the Policy Name");
+    let policyName = window.prompt ("Enter the Password Policy Name");
     appPasswordPolicy[appPasswordPolicyArrayIndex].setName(policyName);
   }
 
+  /* Prompt User to enter Password Policy Id*/
   while (appPasswordPolicy[appPasswordPolicyArrayIndex].policyId == "" || appPasswordPolicy[appPasswordPolicyArrayIndex].policyId == null){
     let policyId = uuidGenerator();
     appPasswordPolicy[appPasswordPolicyArrayIndex].setPolicyId(policyId);
   }
   
-
+  /* Prompt User to enter Min Password Length*/
   let passwdLenMin = window.prompt ("Please enter minimum length of your password. Data entered should be in Numbers and should be >=8 and <=128. If no data entered then default minimum length would be set as 8");
   while (parseInt(passwdLenMin) < 8 || parseInt(passwdLenMin) >  128 || passwdLenMin == null || isNaN(passwdLenMin)){
     passwdLenMin = window.prompt ("Please enter valid value of minimum length of your password. Data entered should be in Numbers and should be >=8 and <=128.. If no data entered then default minimum length would be set as 8");
@@ -304,7 +306,7 @@ function declarePasswordPolicy (){
   appPasswordPolicy[appPasswordPolicyArrayIndex].setPasswordLengthMin(parseInt(passwdLenMin));
   console.log ("Value of password Min length = " + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin);
 
-
+  /* Prompt User to enter Max Password Length*/
   let passwdLenMax = window.prompt ("Please enter maximum length of your password. Data entered should be in Numbers and should be >" + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin + " and <= 128.");
   while (parseInt(passwdLenMax) <= appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin || passwdLenMax == null || isNaN(passwdLenMax || parseInt(passwdLenMax) >128)){
         passwdLenMax = window.prompt ("Please enter valid value of maximum length of your password. Please enter maximum length of your password. Data entered should be in Numbers and should be >" + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMin + " and <= 128.");
@@ -313,6 +315,7 @@ function declarePasswordPolicy (){
   appPasswordPolicy[appPasswordPolicyArrayIndex].setPasswordLengthMax(parseInt(passwdLenMax));
   console.log ("Value of password Max length = " + appPasswordPolicy[appPasswordPolicyArrayIndex].passwordLengthMax);
 
+  /* Prompt User to select Charcter, Special Number and Number*/
   while ((appPasswordPolicy[appPasswordPolicyArrayIndex].characterAllowed== null && appPasswordPolicy[appPasswordPolicyArrayIndex].specialCharacterAllowed == null && appPasswordPolicy[appPasswordPolicyArrayIndex].numberAllowed == null ) || (appPasswordPolicy[appPasswordPolicyArrayIndex].characterAllowed== false && appPasswordPolicy[appPasswordPolicyArrayIndex].specialCharacterAllowed == false && appPasswordPolicy[appPasswordPolicyArrayIndex].numberAllowed == false ))
   {
       let charAllowed = window.confirm ("Please confirm if characters are allowed as part of password?");
